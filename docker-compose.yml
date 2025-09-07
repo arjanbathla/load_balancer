@@ -1,0 +1,90 @@
+version: '3.7'
+ 
+services:
+  ntu-vm-comp20081:
+    container_name: ntu-vm-comp20081
+    image: pedrombmachado/ntu_lubuntu:comp20081
+    ports:
+      - "3390:3389"
+      - "2022:22"
+    hostname: ntu-vm-comp20081
+    volumes:
+      - docker_comp20081:/home/ntu-user/NetBeansProjects
+    networks:
+      - comp20081_network
+ 
+  comp20081-files-container1:
+    container_name: comp20081-files-container1
+    image: pedrombmachado/simple-ssh-container:base
+    expose:
+      - "22"
+    hostname: comp20081-files-container1
+    networks:
+      - comp20081_network
+ 
+  comp20081-files-container2:
+    container_name: comp20081-files-container2
+    image: pedrombmachado/simple-ssh-container:base
+    expose:
+      - "22"
+    hostname: comp20081-files-container2
+    networks:
+      - comp20081_network
+ 
+  comp20081-files-container3:
+    container_name: comp20081-files-container3
+    image: pedrombmachado/simple-ssh-container:base
+    expose:
+      - "22"
+    hostname: comp20081-files-container3
+    networks:
+      - comp20081_network
+ 
+  comp20081-files-container4:
+    container_name: comp20081-files-container4
+    image: pedrombmachado/simple-ssh-container:base
+    expose:
+      - "22"
+    hostname: comp20081-files-container4
+    networks:
+      - comp20081_network
+ 
+  nginx-load-balancer:
+    container_name: nginx-load-balancer
+    image: nginx:latest
+    ports:
+      - "2222:22"  # SSH Load Balancer Entry Point
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo 'worker_processes auto;
+        events { worker_connections 1024; }
+        stream {
+            upstream ssh_backend {
+                least_conn;
+                server comp20081-files-container1:22;
+                server comp20081-files-container2:22;
+                server comp20081-files-container3:22;
+                server comp20081-files-container4:22;
+            }
+ 
+            server {
+                listen 22;
+                proxy_pass ssh_backend;
+            }
+        }' > /etc/nginx/nginx.conf;
+        nginx -g 'daemon off;';
+    networks:
+      - comp20081_network
+    depends_on:
+      - comp20081-files-container1
+      - comp20081-files-container2
+      - comp20081-files-container3
+      - comp20081-files-container4
+ 
+networks:
+  comp20081_network:
+    driver: bridge
+ 
+volumes:
+  docker_comp20081:

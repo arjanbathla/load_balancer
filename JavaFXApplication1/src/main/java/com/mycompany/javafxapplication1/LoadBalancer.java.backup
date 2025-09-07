@@ -1,0 +1,30 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.javafxapplication1;
+
+/**
+ *
+ * @author ntu-user
+ */
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+class LoadBalancer {
+    private final List<String> storageContainers;
+    private final AtomicInteger currentIndex;
+
+    public LoadBalancer(List<String> storageContainers) {
+        this.storageContainers = storageContainers;
+        this.currentIndex = new AtomicInteger(0);
+    }
+
+    public String getNextStorageContainer() {
+        int index = currentIndex.getAndUpdate(i -> (i + 1) % storageContainers.size());
+        return storageContainers.get(index);
+    }
+}
+
+
+

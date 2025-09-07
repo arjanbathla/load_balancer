@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.javafxapplication1.FileManagementController">
+   <children>
+      <Button fx:id="createFile" layoutX="238.0" layoutY="149.0" mnemonicParsing="false" onAction="#CreateFile" text="Create File" />
+      <TextField fx:id="fileName" layoutX="57.0" layoutY="149.0" promptText="File name" />
+      <Button fx:id="openFileButton" layoutX="250.0" layoutY="200.0" mnemonicParsing="false" onAction="#OpenFile" text="Open file" />
+      <TextField fx:id="fileNameTextField" layoutX="57.0" layoutY="200.0" />
+   </children>
+</AnchorPane>
